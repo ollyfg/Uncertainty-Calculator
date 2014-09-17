@@ -1,0 +1,533 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="description" content="Calculate uncertainties easily with this calculator - Just use it like a normal one!">
+		<script type="text/javascript" src="assets/uncertainty.js"></script>
+		<title>Olly's Uncertainty Calculator</title>
+		<style>
+			body {
+				-webkit-transition:background 4s;
+				-moz-transition:background 4s;
+				-o-transition:background 4s;
+				transition:background 4s
+				}
+			.frame {width:300px; margin:0 auto;}
+			.calculator {background-color:#DED7D7; border-radius:10px; margin:20px; margin-bottom:50px;
+				-webkit-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+				-moz-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+				-o-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+				-ms-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+				box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;}
+			
+			.button {background-color:#425651; border-radius:5px; text-align:center; 
+				vertical-align:middle; width:40px; height:40px; color:white; 
+				font-color: white; font-family:monospace; font-weight:bold;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				box-shadow:0.5px 0.5px 0px 1px #33423E;
+				-webkit-box-shadow:0.5px 0.5px 0px 1px #33423E;
+				-moz-box-shadow:0.5px 0.5px 0px 1px #33423E;
+				-o-box-shadow:0.5px 0.5px 0px 1px #33423E;
+				-ms-box-shadow:0.5px 0.5px 0px 1px #33423E;
+				}
+			.button:hover {cursor:pointer; background-color:#485E59;}
+			.button:active {background-color:#3C4F4B;}
+			.button.eq {background-color:#C4C4C4; color:black; font-size:130%;
+				box-shadow:0.5px 0.5px 0px 1px #B3B3B3;
+				-webkit-box-shadow:0.5px 0.5px 0px 1px #B3B3B3;
+				-moz-box-shadow:0.5px 0.5px 0px 1px #B3B3B3;
+				-o-box-shadow:0.5px 0.5px 0px 1px #B3B3B3;
+				-ms-box-shadow:0.5px 0.5px 0px 1px #B3B3B3;}
+			.button.eq:hover {background-color:#CCCCCC;}
+			.button.eq:active {background-color:#B3B3B3;}
+			.button.del {background-color:#884745;
+				box-shadow:0.5px 0.5px 0px 1px #6E3937;
+				-webkit-box-shadow:0.5px 0.5px 0px 1px #6E3937;
+				-moz-box-shadow:0.5px 0.5px 0px 1px #6E3937;
+				-o-box-shadow:0.5px 0.5px 0px 1px #6E3937;
+				-ms-box-shadow:0.5px 0.5px 0px 1px #6E3937;}
+			.button.del:hover {background-color:#6E3937;}
+			.button.del:active {background-color:#542B2A;}
+			
+			.button.sci {background-color:#EEEEEE;
+				box-shadow:0.5px 0.5px 0px 1px #4B4B4B;
+				-webkit-box-shadow:0.5px 0.5px 0px 1px #4B4B4B;
+				-moz-box-shadow:0.5px 0.5px 0px 1px #4B4B4B;
+				-o-box-shadow:0.5px 0.5px 0px 1px #4B4B4B;
+				-ms-box-shadow:0.5px 0.5px 0px 1px #4B4B4B;
+				color:black; font-size:80%; height:2em;}
+			.button.sci:hover {background-color:#F0F0F0;}
+			.button.sci:active {background-color:#D4D4D4;}
+			
+			.buttons.sci table {background-color:#F4F4F4; border-radius:5px; display:none;}
+			.buttons.sci .button {background-color:#555991; height:30px;}
+			.buttons.sci .button:hover {background-color:#5E62A1;}
+			.buttons.sci .button:active {background-color:#4D5185;}
+			
+			.screen textarea {width:100%; height:4em; background-color:#E2E9BA; 
+				border-radius:3px; overflow:auto; text-align:right; font-family:monospace;
+				-webkit-transition:background 2s;
+				-moz-transition:background 2s;
+				-o-transition:background 2s;
+				transition:background 2s}
+			.cite {font-style:italic; color:#736F6F; font-size:70%; text-decoration:none;}
+			.cite a {color:#736F6F; text-decoration:none;}
+			.cite a:hover {color:#4A4747; text-decoration:underline;}
+			.solar {padding:10px; text-align:right;}
+			.solar div {background-color:#4A4747; width:20px; height:20px; 
+				display:inline-block; border:1px solid #333131; border-radius:1px;}
+			.solar div:last-child {border-radius:1px 3px 3px 1px}
+			.solar div:first-child {border-radius:3px 1px 1px 3px}
+			.help {display:none; background-color:#FCFFBE; border:1px dashed #DEE734; border-radius: 1em; font-family:sans-serif; font-size:80%; text-align:left; padding:10px;}
+			h2 {color:#2F2F2F; font-family:sans-serif; text-align:left; text-decoration:none; font-size:100%; margin-left:20px;}
+			a h2:hover {color:blue; text-decoration:underline;}
+			.help p {color:#2F2F2F;}
+			.ans_links {font-size:70%; color:blue; width:100%; position:relative; top:-1.3em; text-align:right; visibility:hidden;}
+			.ans_links a:hover {cursor:pointer; text-decoration:underline;}
+			.ans_links a {margin-right:10px;}
+		</style>
+		<script type="text/javascript" src="assets/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function()
+			{
+				$('.calculator .button').click(handleButtonClick);
+				$('.solar div').mouseover(start_drain);
+				$('.solar div').mouseout(stop_drain);
+			});
+			
+			function start_drain(e)
+			{
+				clearInterval(drainID);
+				drainID = setInterval(drain,1000);
+			}
+			function stop_drain(e)
+			{
+				clearInterval(drainID);
+				drainID = setInterval(un_drain,1000);
+			}
+			function drain()
+			{
+				if (battery > 0 )
+				{
+					battery--;
+					update_screen(battery);
+				}
+			}
+			function un_drain()
+			{
+				battery++;
+				update_screen(battery);
+				if (battery>=20)
+				{
+					clearInterval(drainID);
+				}
+			}
+			
+			function update_screen(level)
+			{
+				var screen=$('.calculator .screen textarea');
+				switch (level) 
+				{
+					case (18):
+						screen.css({'background-color':'#E2E9BA'});
+						break;
+					case (15):
+						screen.css({'background-color':'#A8AE8A'});
+						break;
+					case (10):
+						screen.css({'background-color':'#4A4C3D'});
+						break;
+					case (5):
+						screen.css({'background-color':'#000000'});
+						$('body').css({'background-color':'#FFFFFF'});
+						break;
+					case (0):
+						$('body').css({'background-color':'#000000'});
+						break;
+					default:
+						break;
+				}
+			}
+			
+			var drainID;
+			var battery=20
+			var ans=false;
+			function handleButtonClick(e)
+			{
+				e.preventDefault();
+				var button=$(e.target).closest('.button').text();
+				input(button);
+			}
+			function input(button)
+			{
+				var isinput=true;
+				if (button!=='=' && button.indexOf('Scientific')===-1){hide_links();}
+				switch (button)
+				{
+					case ('='):
+						if (!ans)
+							calculate();
+						isinput=false;
+						break;
+					case ('\u00B1(abs)'):
+						button='\u00B1';
+						break;
+					case ('\u00B1(rel)'):
+						button='\u00B1/';
+						break;
+					case ('\u00B1(%)'):
+						button='\u00B1%';
+						break;
+					case ('10x'):
+						button='10^';
+						if (ans)
+							button+='('+ans.toString()+')';
+						break;
+					case ('DEL'):
+						isinput=false;
+						if (ans)
+							$('.calculator .screen textarea')[0].innerHTML='';
+						else
+							$('.calculator .screen textarea')[0].innerHTML=$('.calculator .screen textarea')[0].innerHTML.substring(0,$('.calculator .screen textarea')[0].innerHTML.length-1);
+						break;
+					case ('AC'):
+						isinput=false;
+						$('.calculator .screen textarea')[0].innerHTML='';
+						break;
+					case ('+'):
+						if (ans)
+							button=ans.toString()+button;
+						else
+							button=button;
+						break;
+					case ('-'):
+						if (ans)
+						{
+							button=ans.toString()+button;
+						}
+						break;
+					case ('\u00F7'):
+						if (ans)
+							button=ans.toString()+button;
+						else
+							button=button;
+						break;
+					case ('\u00D7'):
+						if (ans)
+							button=ans.toString()+button;
+						else
+							button=button;
+						break;
+					case ('^'):
+						if (ans)
+							button=ans.toString()+button;
+						break;
+					case ('ex'):
+						button='e^';
+						if (ans)
+							button+='('+ans.toString()+')';
+						break;
+					case ('Show Scientific'):
+						isinput=false;
+						toggle_scientific();
+						break;
+					case ('Hide Scientific'):
+						isinput=false;
+						toggle_scientific();
+						break;
+					case ('sin'):
+						if (ans)
+							button=button+'('+ans.toString()+')';
+						break;
+					case ('cos'):
+						if (ans)
+							button=button+'('+ans.toString()+')';
+						break;
+					case ('tan'):
+						if (ans)
+							button=button+'('+ans.toString()+')';
+						break;
+					case ('log'):
+						if (ans)
+							button=button+'('+ans.toString()+')';
+						break;
+					case ('ln'):
+						if (ans)
+							button=button+'('+ans.toString()+')';
+						break;
+					case ('\u221A'):
+						if (ans)
+							button=button+ans.toString();
+						break;
+					default:
+						break;
+				}
+				if (isinput)
+				{
+					var screen=$('.calculator .screen textarea')
+					screen[0].innerHTML=((ans?'':screen[0].innerHTML)+button);
+					ans=false;
+				}
+			}
+			function raw_input(s)
+			{
+				var screen=$('.calculator .screen textarea')[0];
+				screen.innerHTML+=s;
+			}
+			function calculate()
+			{
+				var screen=$('.calculator .screen textarea');
+				var expression=screen.text();
+				try
+				{
+					var answer=parseExpression2(expression);
+					screen.text(answer.value+'\u00B1'+answer.abs_uncertainty());
+					ans=answer;
+					show_links();
+				} catch (e) {
+					console.log(e);
+					ans=true;
+					screen.text('ERROR');
+				}
+			}
+			function show_links()
+			{
+				$('.ans_links').css('visibility','visible');
+			}
+			function hide_links()
+			{
+				$('.ans_links').css('visibility','hidden');
+				var l=$('.ans_links a:nth-child(2)');
+				l.text('Show Relative');
+			}
+			function toggle_relative()
+			{
+				var screen=$('.calculator .screen textarea');
+				var l=$('.ans_links a:nth-child(2)');
+				if (l.text().indexOf('Absolute')==-1)
+				{
+					l.text('Show Absolute');
+					screen.text(ans.value+"(\u00B1"+ans.per_uncertainty()+"%)");
+				} else {
+					l.text('Show Relative');
+					screen.text(ans.value+"\u00B1"+ans.abs_uncertainty());
+				}
+			}
+			function round_to_final()
+			{
+				var screen=$('.calculator .screen textarea');
+				var l=$('.ans_links a:nth-child(2)');
+				if (l.text().indexOf('Absolute')==-1)
+				{
+					var unc=ans.abs_uncertainty(1);
+					var absolute=true;
+				} else {
+					var unc=ans.per_uncertainty(1);
+					var absolute=false;
+				}
+				if (unc===0)
+				{
+					screen.text(ans.value+'\u00B1'+unc);
+					return;
+				}
+				var dp_in_unc = parseInt(Math.log(unc)/Math.LN10);	// -ve if < 0, otherwise how many 0s
+				var rounded_value=parseInt(Math.round(ans.value/Math.pow(10,dp_in_unc-1)))*Math.pow(10,dp_in_unc-1);
+				if (absolute)
+				{
+					screen.text(rounded_value+'\u00B1'+unc);
+				} else {
+					screen.text(rounded_value+'(\u00B1'+unc+'%)');
+				}
+			}
+			function toggle_scientific()
+			{
+				var l=$('.button.sci');
+				if (l.text().indexOf('Show')!==-1){
+					l.text('Hide Scientific');
+					$('.buttons.sci').animate({'height':90},400,'swing',fade_in);
+				} else {
+					l.text('Show Scientific');
+					$('.buttons.sci table').fadeOut(slide_away);
+				}
+			}
+			function fade_in()
+			{
+				$('.buttons.sci table').fadeIn();
+			}
+			function slide_away()
+			{
+				$('.buttons.sci').animate({'height':0});
+			}
+		</script>
+	</head>
+	<body>
+		<table class="frame">
+			<tr>
+				<td>
+					<table class="calculator" cellspacing="7px;">
+					<tr><td colspan='2' class='cite'><a href='http://www.ollyfg.com'>from Olly F-G</a> v1.2</td><td class="solar" colspan='3'><div></div><div></div><div></div><div></div></td></tr>
+					<tr>
+						<td class="screen" colspan='5'>
+							<textarea></textarea>
+							<div class='ans_links'>
+								<a onclick="round_to_final()">Round To Final Answer</a>
+								<a onclick="toggle_relative()">Show Relative</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="button sci" colspan='5'>Show Scientific</td>
+					</tr>
+					<tr class='buttons sci'>
+						<td colspan="5">
+							<table style="width:100%;" cellspacing="10px;">
+								<tr>
+									<td class="button">^</td>
+									<td class="button">&radic;</td>
+									<td class="button">10<sup>x</sup></td>
+									<td class="button">log</td>
+									<td class="button">ln</td>
+								</tr>
+								<tr>
+									<td class="button">sin</td>
+									<td class="button">cos</td>
+									<td class="button">tan</td>
+									<td class="button">&pi;</td>
+									<td class="button"><i>e<sup>x</sup></i></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="button">(</td>
+						<td class="button">)</td>
+						<td class="button">&plusmn;(abs)</td>
+						<td class="button">&plusmn;(rel)</td>
+						<td class="button">&plusmn;(%)</td>
+					</tr>
+					<tr>
+						<td class="button">7</td>
+						<td class="button">8</td>
+						<td class="button">9</td>
+						<td class="button del">DEL</td>
+						<td class="button del">AC</td>
+					</tr>
+					<tr>
+						<td class="button">4</td>
+						<td class="button">5</td>
+						<td class="button">6</td>
+						<td class="button">&times;</td>
+						<td class="button">&divide;</td>
+					</tr>
+					<tr>
+						<td class="button">1</td>
+						<td class="button">2</td>
+						<td class="button">3</td>
+						<td class="button">+</td>
+						<td class="button">-</td>
+					</tr>
+					<tr>
+						<td class="button">0</td>
+						<td class="button">.</td>
+						<td class="button eq" colspan='3'>=</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:center;">
+					<a href="#" onclick='$(".help.this").slideToggle()'><h2>How do you use this calculator?</h2></a>
+					<div class="help this">
+						<p>Just like a real one!</p>
+						<p>The only big difference is that you can click one of the &plusmn; buttons and then enter the uncertainty for that value 
+						(either absolute, relative or percentage, depending on the button). </p><p>
+						Once you've entered <b>&plusmn;</b> it will act as an absolute uncertainty; if you would like another sort, type <b>&plusmn;/</b> for
+						a relative uncertainty or <b>&plusmn;%</b> for a perecentage uncertainty.
+						You can also type <b>'e'</b> to enter <b>'10^'</b> as a shortcut.</p><p>
+						Occasionally the calculator can sometimes get buggy and stop taking input - if this happens you can just <a href="http://ollyfg.com/uncertainty.html">reload</a> the page
+						(If you're a smart cookie and work out exactly when this happens, please <a href="http://ollyfg.com#contact">Contact Me</a>).</p>
+					</div>
+					
+					<a href="#" onclick='$(".help.what").slideToggle()'><h2>What is an uncertainty?</h2></a>
+					<div class='help what'>
+						<p>In real life, you can't measure something perfectly. 
+						Take a moment to think about that. Take a ruler for example - you can measure that a pencil is 15cm long, 
+						you can probably measure that it's 15.1cm if you look closely. But can we say that the pencil is 15.100000cm long?
+						No, we can't, because we aren't sure if all those 0's are actually 0, they could be 5's, of 9's or anything!</p>
+						<p>So what can we do about this?
+						This is where uncertainties come in. when we can say that the pencil is 15.1cm long <i>plus or minus</i> 0.05cm!
+						What this means is that the actual length of the pencil could be anywhere between 15.1+0.05cm (15.15cm) and 15.1-0.05cm (15.05cm).
+						In mathematical terms we use the funny &plusmn; symbol to mean plus or minus, so our pencil length would be this: 15.01&plusmn;0.05cm.</p>
+						<p>Now when someone comes along with a fancy new super-ruler, and says "Aha! This pencil isn't 15.1cm long, it's 15.09cm long!" we can
+						still say that we're right, because 15.09 is between 15.05 and 15.15.</p>
+						<p>This is why it's always important to record the uncertainty of things that you measure, because it means that you always know exactly 
+						<i>how</i> exact your measurement is (smaller uncertainties mean a more exact measurement).</p>
+						</div>
+					
+					<a href="#" onclick='$(".help.types").slideToggle()'><h2>What sorts of uncertainties exist?</h2></a>
+					<div class="help types">
+					<p>There are 3 sorts of uncertainty that most people use:</p>
+						<ul>
+							<li>
+							<b>Absolute Uncertainty</b> <p>This is what we used in our example above, and it means that we give our uncertainty value (0.05) in the
+							same units as the length we measured (so cm in the example above). Absolute Uncertainties are the usual way to give uncertainties in final answers.</p>
+							</li>
+							<li>
+							<b>Relative Uncertainty</b> <p>Sometimes just looking at absolute uncertainties makes it hard to put a number in context.
+							In this case we could convert the absolute uncertainty into a relative uncertainty. This means that the uncertainty value
+							will be <i>relative</i> to the number it belongs to. If the relative uncertainty is 1, it means that the absolute uncertainty is 
+							exactly the same as the number, while if it is 0.5, it means that it is exactly half the number it belongs to.
+							To calculate the relative uncertainty from the absolute uncertainty, we divide the absolute uncertainty by the number.
+							In our pencil case above, we would do: 
+							0.05cm &divide; 15.1 = 0.0006
+							That's a small number! Now we know that our uncertainty is tiny compared to the actual number, so it was an accurate measurement.
+							</li>
+							<li>
+							<b>Percentage Uncertainty</b> <p>While relative uncertanties are great and all, they don't really put the number in much context - all 
+							we can see is that it's pretty small. Luckily, most of us know what a percent is (it's one hundredth). And handily, if we times our
+							relative uncertainty by 100, we get a number called the percentage uncertainty, which tells us how exact our measurement is by
+							telling us how many <i>percent</i> of our value can change, and still be within the absolute uncertainty that we measured.
+							From the example above we can calculate the percentage uncertainty by doing:
+							0.0006 &times; 100 = 0.06%
+							Percentage uncertainties are normally written like so:
+							pencil length = 15.1(&plusmn;0.06%)cm.
+							</p>
+							</li>
+						</ul>
+					</div>
+					
+					<a href="#" onclick='$(".help.prop").slideToggle()'><h2>How do you normally propagate uncertainties?</h2></a>
+					<div class="help prop">
+						<p>For each operation you can perform on a number, there are different ways that errors need to be propagated. The ones handled by this calculator are outlined below:</p>
+						<ul>
+							<li>
+								<b>Addition and Subtraction.</b> <p>In this case we add the absolute uncertainties together using the following formula to get the resulting absolute uncertainty.</p>
+								<p>For two absolute uncertainties, X and Y:
+								absolute uncertainty = &radic;(X<sup>2</sup>+Y<sup>2</sup>).</p>
+							</li>
+							<li>
+								<b>Multiplication and Division.</b> <p>In this case we add the relative uncertainties together using the same formula to get the resulting relative uncertainty.</p>
+								<p>For two relative uncertainties, X and Y:
+								relative uncertainty = &radic;(X<sup>2</sup>+Y<sup>2</sup>).</p>
+							</li>
+							<li>
+								<b>Exponentials.</b> <p>Here we simply multiply the relative uncertainty by the exponent - easy!</p>
+								<p>For relative uncertainty, X, from a number which is being squared:<br>
+								relative uncertainty = X &times; 2.</p>
+							</li>
+							<li>
+								<b>Trigometric Functions.</b> <p>These are a little more tricky, and the current version of the calculator simply estimates uncertainties using the formula:
+								<br>
+								absolute uncertainty = sin(value)-sin(value+absolute uncertainty).</p>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
