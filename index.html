@@ -72,6 +72,7 @@
 			var drainID;
 			var battery=20
 			var ans=false;
+			var last_answer=false;
 			function handleButtonClick(e)
 			{
 				e.preventDefault();
@@ -101,7 +102,7 @@
 					case ('10x'):
 						button='10^';
 						if (ans)
-							button+='('+ans.toString()+')';
+							button+='(ANS)';
 						break;
 					case ('DEL'):
 						isinput=false;
@@ -113,39 +114,40 @@
 					case ('AC'):
 						isinput=false;
 						$('.calculator .screen textarea')[0].innerHTML='';
+						last_answer=false;
 						break;
 					case ('+'):
 						if (ans)
-							button=ans.toString()+button;
+							button='ANS'+button;
 						else
 							button=button;
 						break;
 					case ('-'):
 						if (ans)
 						{
-							button=ans.toString()+button;
+							button='ANS'+button;
 						}
 						break;
 					case ('\u00F7'):
 						if (ans)
-							button=ans.toString()+button;
+							button='ANS'+button;
 						else
 							button=button;
 						break;
 					case ('\u00D7'):
 						if (ans)
-							button=ans.toString()+button;
+							button='ANS'+button;
 						else
 							button=button;
 						break;
 					case ('^'):
 						if (ans)
-							button=ans.toString()+button;
+							button='ANS'+button;
 						break;
 					case ('ex'):
 						button='e^';
 						if (ans)
-							button+='('+ans.toString()+')';
+							button+='(ANS)';
 						break;
 					case ('Show Scientific'):
 						isinput=false;
@@ -157,36 +159,42 @@
 						break;
 					case ('sin'):
 						if (ans)
-							button=button+'('+ans.toString()+')';
+							button=button+'(ANS)';
 						break;
 					case ('cos'):
 						if (ans)
-							button=button+'('+ans.toString()+')';
+							button=button+'(ANS)';
 						break;
 					case ('tan'):
 						if (ans)
-							button=button+'('+ans.toString()+')';
+							button=button+'(ANS)';
 						break;
 					case ('log'):
 						if (ans)
-							button=button+'('+ans.toString()+')';
+							button=button+'(ANS)';
 						break;
 					case ('ln'):
 						if (ans)
-							button=button+'('+ans.toString()+')';
+							button=button+'(ANS)';
 						break;
 					case ('\u221A'):
 						if (ans)
-							button=button+ans.toString();
+							button=button+'ANS';
 						break;
 					default:
 						break;
 				}
+				var screen=$('.calculator .screen textarea');
 				if (isinput)
 				{
-					var screen=$('.calculator .screen textarea')
 					screen[0].innerHTML=((ans?'':screen[0].innerHTML)+button);
 					ans=false;
+				}
+				if (screen.text().indexOf('ANS')!==-1)
+				{
+					show_ANS_value();
+				} else if ($('.calculator .ans_value').css('display')!=='none') {
+					hide_ANS_value();
 				}
 			}
 			function raw_input(s)
@@ -200,13 +208,25 @@
 				var expression=screen.text();
 				try
 				{
+					if (expression.indexOf('ANS')!==-1)
+					{
+						if (last_answer)
+						{
+							expression=expression.replace(/ANS/g, (last_answer.value+'\u00B1'+last_answer.uncertainty));
+						} else {
+							screen.text('ERROR');
+							throw "Answer isn't set";
+						}
+					}
 					var answer=parseExpression2(expression);
 					screen.text(answer.value+'\u00B1'+answer.abs_uncertainty());
 					ans=answer;
+					last_answer=answer;
 					show_links();
 				} catch (e) {
 					console.log(e);
 					ans=true;
+					last_alswer=false;
 					screen.text('ERROR');
 				}
 			}
@@ -278,6 +298,15 @@
 			{
 				$('.buttons.sci').animate({'height':0});
 			}
+			function show_ANS_value()
+			{
+				$('.calculator .ans_value .value').text(last_answer?last_answer:'NONE');
+				$('.calculator .ans_value').fadeIn();
+			}
+			function hide_ANS_value()
+			{
+				$('.calculator .ans_value').fadeOut();
+			}
 		</script>
 	</head>
 	<body>
@@ -285,7 +314,7 @@
 			<tr>
 				<td>
 					<table class="calculator" cellspacing="7px;">
-					<tr><td colspan='2' class='cite'><a href='http://www.ollyfg.com'>from Olly F-G</a> v1.2</td><td class="solar" colspan='3'><div></div><div></div><div></div><div></div></td></tr>
+					<tr><td colspan='2' class='cite'><a href='http://www.ollyfg.com'>from Olly F-G</a> v1.3</td><td class="solar" colspan='3'><div></div><div></div><div></div><div></div></td></tr>
 					<tr>
 						<td class="screen" colspan='5'>
 							<textarea></textarea>
@@ -293,6 +322,7 @@
 								<a onclick="round_to_final()">Round To Final Answer</a>
 								<a onclick="toggle_relative()">Show Relative</a>
 							</div>
+							<div style="height:1em"><div class="ans_value">ANS = <span class="value"></span></div></div>
 						</td>
 					</tr>
 					<tr>
@@ -349,7 +379,8 @@
 					<tr>
 						<td class="button">0</td>
 						<td class="button">.</td>
-						<td class="button eq" colspan='3'>=</td>
+						<td class="button">ANS</td>
+						<td class="button eq" colspan='2'>=</td>
 					</tr>
 				</table>
 				</td>
