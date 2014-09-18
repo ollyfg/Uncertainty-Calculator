@@ -82,3 +82,4 @@ a h2:hover {color:blue; text-decoration:underline;}
 .ans_links {font-size:70%; color:blue; width:100%; position:relative; top:-1.3em; text-align:right; visibility:hidden;}
 .ans_links a:hover {cursor:pointer; text-decoration:underline;}
 .ans_links a {margin-right:10px;}
+.ans_value {font-size:70%; float:right; color:#736F6F; display:none;}
