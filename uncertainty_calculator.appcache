@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# v1 - 2014-09-25
+# The cache manifest file for the Uncertainty Calculator, so it can work offline.
+http://ollyfg.github.io/Uncertainty-Calculator/index.html
+http://ollyfg.github.io/Uncertainty-Calculator/assets/screen.css
+http://ollyfg.github.io/Uncertainty-Calculator/assets/uncertainty.js
+http://ollyfg.github.io/Uncertainty-Calculator/assets/jquery-1.10.1.min.js
+#http://ollyfg.github.io/Uncertainty-Calculator/assets/jquery-1.10.1.min.map
+http://ollyfg.github.io/Uncertainty-Calculator/assets/favicons
+http://ollyfg.github.io/Uncertainty-Calculator/assets/
