@@ -12,6 +12,7 @@
 		<link rel="apple-touch-icon" sizes="76x76" href="/assets/favicons/apple-touch-icon-76x76.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="/assets/favicons/apple-touch-icon-152x152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon-180x180.png">
+		<link rel="apple-touch-startup-image" href="/assets/favicons/splash.png">
 		<meta name="apple-mobile-web-app-title" content="Uncertainty Calculator">
 		<link rel="icon" type="image/png" href="/assets/favicons/favicon-192x192.png" sizes="192x192">
 		<link rel="icon" type="image/png" href="/assets/favicons/favicon-160x160.png" sizes="160x160">
@@ -22,12 +23,22 @@
 		<meta name="msapplication-TileImage" content="/assets/favicons/mstile-144x144.png">
 		<meta name="msapplication-config" content="/assets/favicons/browserconfig.xml">
 		<meta name="application-name" content="Uncertainty Calculator">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+		<meta name="apple-mobile-web-app-title" content="Uncertainty Calculator">
+		<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+		<meta http-equiv="cleartype" content="on">
 		<script type="text/javascript" src="assets/uncertainty.js"></script>
 		<link rel="shortcut icon" href="assets/favicon.ico" />
 		<title>Olly's Uncertainty Calculator</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="assets/screen.css">
 		<script type="text/javascript" src="assets/jquery-1.10.1.min.js"></script>
 		<script type="text/javascript">
+			// Disable context menu on android
+			for (var i=0; i<$('button').length; i++)
+				if(navigator.userAgent.match(/Android/i))
+					$('.button')[i].addEventListener('contextmenu', function (e) { e.preventDefault() })
 			$(document).ready(function()
 			{
 				$('.calculator .button').click(handleButtonClick);

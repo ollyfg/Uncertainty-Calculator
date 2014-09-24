@@ -21,6 +21,8 @@ body {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	-{prefix}-user-select: none;
+	-webkit-touch-callout: none;
 	box-shadow:0.5px 0.5px 0px 1px #33423E;
 	-webkit-box-shadow:0.5px 0.5px 0px 1px #33423E;
 	-moz-box-shadow:0.5px 0.5px 0px 1px #33423E;
