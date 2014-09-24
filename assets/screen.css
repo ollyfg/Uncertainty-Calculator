@@ -79,7 +79,8 @@ body {
 .solar div:first-child {border-radius:3px 1px 1px 3px}
 .help {display:none; background-color:#FCFFBE; border:1px dashed #DEE734; border-radius: 1em; font-family:sans-serif; font-size:80%; text-align:left; padding:10px;}
 h2 {color:#2F2F2F; font-family:sans-serif; text-align:left; text-decoration:none; font-size:100%; margin-left:20px;}
-a h2:hover {color:blue; text-decoration:underline;}
+a h2 {text-decoration:underline;}
+a h2:hover {color:blue; text-decoration:underline; cursor:pointer;}
 .help p {color:#2F2F2F;}
 .ans_links {font-size:70%; color:blue; width:100%; position:relative; top:-1.3em; text-align:right; visibility:hidden;}
 .ans_links a:hover {cursor:pointer; text-decoration:underline;}
