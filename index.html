@@ -466,32 +466,13 @@
 							</li>
 						</ul>
 					</div>
-					
-					<a href="#" onclick='$(".help.prop").slideToggle()'><h2>How do you normally propagate uncertainties?</h2></a>
-					<div class="help prop">
-						<p>For each operation you can perform on a number, there are different ways that errors need to be propagated. The ones handled by this calculator are outlined below:</p>
-						<ul>
-							<li>
-								<b>Addition and Subtraction.</b> <p>In this case we add the absolute uncertainties together using the following formula to get the resulting absolute uncertainty.</p>
-								<p>For two absolute uncertainties, X and Y:
-								absolute uncertainty = &radic;(X<sup>2</sup>+Y<sup>2</sup>).</p>
-							</li>
-							<li>
-								<b>Multiplication and Division.</b> <p>In this case we add the relative uncertainties together using the same formula to get the resulting relative uncertainty.</p>
-								<p>For two relative uncertainties, X and Y:
-								relative uncertainty = &radic;(X<sup>2</sup>+Y<sup>2</sup>).</p>
-							</li>
-							<li>
-								<b>Exponentials.</b> <p>Here we simply multiply the relative uncertainty by the exponent - easy!</p>
-								<p>For relative uncertainty, X, from a number which is being squared:<br>
-								relative uncertainty = X &times; 2.</p>
-							</li>
-							<li>
-								<b>Trigometric Functions.</b> <p>These are a little more tricky, and the current version of the calculator simply estimates uncertainties using the formula:
-								<br>
-								absolute uncertainty = sin(value)-sin(value+absolute uncertainty).</p>
-							</li>
-						</ul>
+					<a href="#" onclick='$(".help.contact").slideToggle()'><h2>I've found a bug, or have a suggestion!</h2></a>
+					<div class="help types">
+					<p>Wonderful! Please send me an email either by filling in the form on <a href="http://ollyfg.com/#contact">my website</a>, or just
+					send me an email at <a href="mailto:calculator@ollyfg.com">calculator@ollyfg.com</a>. I love hearing about bugs and improvements people want,
+					as it means that this calculator will always be improving.</p>
+					<p>If you yourself are a web developer, or just generally know your way around javascript, you can feel free to make cahnges and submit pull 
+					requests to this calculator on <a href="https://github.com/ollyfg/Uncertainty-Calculator">Github</a>.</p>
 					</div>
 				</td>
 			</tr>
