@@ -30,6 +30,7 @@
 		<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
 		<meta http-equiv="cleartype" content="on">
 		<script type="text/javascript" src="assets/uncertainty.js"></script>
+		<script type="text/javascript" src="assets/IntervalArithmetic.js"></script>
 		<link rel="shortcut icon" href="assets/favicon.ico" />
 		<title>Olly's Uncertainty Calculator</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="assets/screen.css">
@@ -52,6 +53,7 @@
 				$('.calculator .button').click(handleButtonClick);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
+				
 			});
 			
 			function start_drain(e)
@@ -243,6 +245,9 @@
 			}
 			function calculate()
 			{
+				// Send Analytics
+				ga('send', 'event', 'button', 'click', 'Equals');
+				// Calculate!
 				var screen=$('.calculator .screen textarea');
 				var expression=screen.text();
 				try
