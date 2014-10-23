@@ -3,7 +3,7 @@
 // A base number class supporting uncertainties
 function UNumber(value,uncertainty)
 {
-	this.value=parseFloat(value?Math.round(value*10e10)/10e10:0);
+	this.value=parseFloat(value?value.toPrecision(12):0);
 	// All uncertainties are considered as absolute
 	this.uncertainty=Math.abs(parseFloat(uncertainty?uncertainty:0));
 	this.toString = function()
