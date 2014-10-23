@@ -192,7 +192,7 @@ function parseExpression2(string)
 	
 	function operator_order(operator)
 	{
-		var ops=['sin','cos','tan','^','\u221A','\u00F7','\u00D7','+','-'];
+		var ops=['sin','cos','tan','^','\u221A','\u00F7','\u00D7','+','-'].reverse();
 		return ops.indexOf(operator)===-1?0:ops.indexOf(operator);
 	}
 	
