@@ -68,7 +68,7 @@ function UNumber(value,uncertainty)
 		// Add rel uncertainties
 		var times_unc = this.pythag( number.rel_uncertainty(), this.rel_uncertainty() );
 		var times_val=this.value*number.value;
-		return new UNumber( times_val, times_unc );
+		return new UNumber( times_val, times_unc*times_val );
 	}
 	this.divide = function(raw)
 	{
