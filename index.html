@@ -30,9 +30,7 @@
 		<meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
 		<meta http-equiv="cleartype" content="on">
 		<script type="text/javascript" src="assets/uncertainty.js"></script>
-<!--
 		<script type="text/javascript" src="assets/IntervalArithmetic.js"></script>
--->
 		<link rel="shortcut icon" href="assets/favicon.ico" />
 		<title>Olly's Uncertainty Calculator</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="assets/screen.css">
@@ -57,9 +55,9 @@
 				$('.calculator .button').click(handleButtonClick);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
-				
+
 			});
-			
+
 			function start_drain(e)
 			{
 				clearInterval(drainID);
@@ -87,11 +85,11 @@
 					clearInterval(drainID);
 				}
 			}
-			
+
 			function update_screen(level)
 			{
 				var screen=$('.calculator .screen textarea');
-				switch (level) 
+				switch (level)
 				{
 					case (18):
 						screen.css({'background-color':'#E2E9BA'});
@@ -113,11 +111,12 @@
 						break;
 				}
 			}
-			
+
 			var drainID;
 			var battery=20
 			var ans=false;
 			var last_answer=false;
+			var realMode=false;
 			function handleButtonClick(e)
 			{
 				e.preventDefault();
@@ -134,6 +133,16 @@
 						if (!ans)
 							calculate();
 						isinput=false;
+						break;
+					case ('Turn On Real Mode'):
+						isinput=false;
+						realMode=true;
+						$('.calculator .buttons.sci #real_mode').text('Turn Off Real Mode');
+						break;
+					case ('Turn Off Real Mode'):
+						isinput=false;
+						realMode=false;
+						$('.calculator .buttons.sci #real_mode').text('Turn On Real Mode');
 						break;
 					case ('\u00B1(abs)'):
 						button='\u00B1';
@@ -160,6 +169,7 @@
 						isinput=false;
 						$('.calculator .screen textarea')[0].innerHTML='';
 						last_answer=false;
+						ans=false;
 						break;
 					case ('+'):
 						if (ans)
@@ -266,7 +276,7 @@
 							throw "Answer isn't set";
 						}
 					}
-					var answer=parseExpression2(expression);
+					var answer=parseExpression(expression);
 					screen.text(answer.value+'\u00B1'+answer.abs_uncertainty());
 					ans=answer;
 					last_answer=answer;
@@ -393,6 +403,9 @@
 									<td class="button">&pi;</td>
 									<td class="button"><i>e<sup>x</sup></i></td>
 								</tr>
+								<tr>
+									<td class="button" id="real_mode" colspan="5">Turn On Real Mode</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -438,7 +451,7 @@
 					<a onclick='$(".help.this").slideToggle()'><h2>How do you use this calculator?</h2></a>
 					<div class="help this">
 						<p>Just like a real one!</p>
-						<p>The only big difference is that you can click one of the &plusmn; buttons and then enter the uncertainty for that value 
+						<p>The only big difference is that you can click one of the &plusmn; buttons and then enter the uncertainty for that value
 						(either absolute, relative or percentage, depending on the button). </p><p>
 						Once you've entered <b>&plusmn;</b> it will act as an absolute uncertainty; if you would like another sort, type <b>&plusmn;/</b> for
 						a relative uncertainty or <b>&plusmn;%</b> for a perecentage uncertainty.
@@ -446,11 +459,11 @@
 						Occasionally the calculator can sometimes get buggy and stop taking input - if this happens you can just <a href="http://ollyfg.com/uncertainty.html">reload</a> the page
 						(If you're a smart cookie and work out exactly when this happens, please <a href="http://ollyfg.com#contact">Contact Me</a>).</p>
 					</div>
-					
+
 					<a onclick='$(".help.what").slideToggle()'><h2>What is an uncertainty?</h2></a>
 					<div class='help what'>
-						<p>In real life, you can't measure something perfectly. 
-						Take a moment to think about that. Take a ruler for example - you can measure that a pencil is 15cm long, 
+						<p>In real life, you can't measure something perfectly.
+						Take a moment to think about that. Take a ruler for example - you can measure that a pencil is 15cm long,
 						you can probably measure that it's 15.1cm if you look closely. But can we say that the pencil is 15.100000cm long?
 						No, we can't, because we aren't sure if all those 0's are actually 0, they could be 5's, of 9's or anything!</p>
 						<p>So what can we do about this?
@@ -459,10 +472,10 @@
 						In mathematical terms we use the funny &plusmn; symbol to mean plus or minus, so our pencil length would be this: 15.01&plusmn;0.05cm.</p>
 						<p>Now when someone comes along with a fancy new super-ruler, and says "Aha! This pencil isn't 15.1cm long, it's 15.09cm long!" we can
 						still say that we're right, because 15.09 is between 15.05 and 15.15.</p>
-						<p>This is why it's always important to record the uncertainty of things that you measure, because it means that you always know exactly 
+						<p>This is why it's always important to record the uncertainty of things that you measure, because it means that you always know exactly
 						<i>how</i> exact your measurement is (smaller uncertainties mean a more exact measurement).</p>
 						</div>
-					
+
 					<a onclick='$(".help.types").slideToggle()'><h2>What sorts of uncertainties exist?</h2></a>
 					<div class="help types">
 					<p>There are 3 sorts of uncertainty that most people use:</p>
@@ -474,15 +487,15 @@
 							<li>
 							<b>Relative Uncertainty</b> <p>Sometimes just looking at absolute uncertainties makes it hard to put a number in context.
 							In this case we could convert the absolute uncertainty into a relative uncertainty. This means that the uncertainty value
-							will be <i>relative</i> to the number it belongs to. If the relative uncertainty is 1, it means that the absolute uncertainty is 
+							will be <i>relative</i> to the number it belongs to. If the relative uncertainty is 1, it means that the absolute uncertainty is
 							exactly the same as the number, while if it is 0.5, it means that it is exactly half the number it belongs to.
 							To calculate the relative uncertainty from the absolute uncertainty, we divide the absolute uncertainty by the number.
-							In our pencil case above, we would do: 
+							In our pencil case above, we would do:
 							0.05cm &divide; 15.1 = 0.0006
 							That's a small number! Now we know that our uncertainty is tiny compared to the actual number, so it was an accurate measurement.
 							</li>
 							<li>
-							<b>Percentage Uncertainty</b> <p>While relative uncertanties are great and all, they don't really put the number in much context - all 
+							<b>Percentage Uncertainty</b> <p>While relative uncertanties are great and all, they don't really put the number in much context - all
 							we can see is that it's pretty small. Luckily, most of us know what a percent is (it's one hundredth). And handily, if we times our
 							relative uncertainty by 100, we get a number called the percentage uncertainty, which tells us how exact our measurement is by
 							telling us how many <i>percent</i> of our value can change, and still be within the absolute uncertainty that we measured.
@@ -494,12 +507,23 @@
 							</li>
 						</ul>
 					</div>
+
+					<a onclick='$(".help.real_mode").slideToggle()'><h2>What is "real mode"?</h2></a>
+					<div class="help real_mode">
+					<p>The way to calculate uncertainty estimates that I was taught at university was wrong (or at least very simplified for certain uses).
+					By default this calculator still uses this way, as it is what I use it most for, however, by using "real mode" you can calculate more accurate error estimates.
+					The real mode uses a type of mathematics called "interval arithmetic", which bascially means that we are doing maths with ranges of numbers.
+					The actual maths is pretty complicated, and I don't pretend to understand it all, but by standing on the shoulders of giants
+					(<a href="https://github.com/Jeff-Tian/JavaScriptIntervalArithmetic">Jeff Tian</a>), I have managed to build it into this calculator. In most cases you shouldn't
+					see massive differences, except when dealing with very large errors.</p>
+					</div>
+
 					<a onclick='$(".help.contact").slideToggle()'><h2>I've found a bug, or have a suggestion!</h2></a>
 					<div class="help contact">
 					<p>Wonderful! Please send me an email either by filling in the form on <a href="http://ollyfg.com/#contact">my website</a>, or just
 					send me an email at <a href="mailto:calculator@ollyfg.com">calculator@ollyfg.com</a>. I love hearing about bugs and improvements people want,
 					as it means that this calculator will always be improving.</p>
-					<p>If you yourself are a web developer, or just generally know your way around javascript, you can feel free to make changes and submit pull 
+					<p>If you yourself know your way around javascript, you can feel free to make changes and submit pull
 					requests to this calculator on <a href="https://github.com/ollyfg/Uncertainty-Calculator">Github</a>.</p>
 					</div>
 				</td>
