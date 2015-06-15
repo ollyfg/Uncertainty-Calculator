@@ -16,18 +16,21 @@ function UNumber(value,uncertainty)
 	this.abs_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.uncertainty,sf);
 	}
 	this.rel_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
 		if (this.value===0) {return Infinity;}
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.uncertainty/this.value,sf);
 	}
 	this.per_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
 		if (this.value===0) {return Infinity;}
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.rel_uncertainty(sf)*100,sf);
 	}
 	this.pythag = function(n1,n2)
