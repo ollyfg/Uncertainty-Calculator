@@ -53,6 +53,7 @@
 			$(document).ready(function()
 			{
 				$('.calculator .button').click(handleButtonClick);
+				$('.calculator .screen textarea').keypress(handleKeyPress);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
 
@@ -117,6 +118,14 @@
 			var ans=false;
 			var last_answer=false;
 			var realMode=false;
+			function handleKeyPress(e)
+			{
+				var keyCode = e.which || e.key || e.keyCode;
+				if (keyCode == 13 && !e.shiftKey) {
+					e.preventDefault();
+					calculate();
+				}
+			}
 			function handleButtonClick(e)
 			{
 				e.preventDefault();
