@@ -53,7 +53,7 @@
 			$(document).ready(function()
 			{
 				$('.calculator .button').click(handleButtonClick);
-				$('.calculator .screen textarea').keypress(handleKeyPress);
+				$('body').keypress(handleKeyPress);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
 
@@ -118,12 +118,40 @@
 			var ans=false;
 			var last_answer=false;
 			var realMode=false;
+			var historyStack=[''];
+			var historyIndex=0;
 			function handleKeyPress(e)
 			{
 				var keyCode = e.which || e.key || e.keyCode;
+				// Handle enter, but not shift-enter
 				if (keyCode == 13 && !e.shiftKey) {
 					e.preventDefault();
 					calculate();
+				}
+				// Ctrl Z
+				else if (keyCode == 26 && e.ctrlKey) {
+					e.preventDefault();
+					var screen=$('.calculator .screen textarea');
+					if (historyIndex<historyStack.length){
+						historyIndex++;
+					}
+					var new_exp = historyStack[historyStack.length-(historyIndex)];
+					if (new_exp!==undefined) {
+						screen.val(new_exp);
+					}
+
+				}
+				// Ctrl Y
+				else if (keyCode == 25 && e.ctrlKey) {
+					e.preventDefault();
+					var screen=$('.calculator .screen textarea');
+					if (historyIndex>0){
+						historyIndex--;
+					}
+					var new_exp = historyStack[historyStack.length-(historyIndex)];
+					if (new_exp!==undefined) {
+						screen.val(new_exp);
+					}
 				}
 				ans=false;
 				hide_links();
@@ -266,7 +294,7 @@
 			}
 			function raw_input(s)
 			{
-				var screen=$('.calculator .screen textarea')[0];
+				var screen=$('.calculator .screen textarea');
 				screen.val(screen.val()+s);
 			}
 			function calculate()
@@ -276,6 +304,8 @@
 				// Calculate!
 				var screen=$('.calculator .screen textarea');
 				var expression=screen.val();
+				historyStack.push(expression);
+				historyIndex=0;
 				try
 				{
 					if (expression.indexOf('ANS')!==-1)
