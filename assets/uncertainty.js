@@ -232,7 +232,7 @@ function to_absolute(u,v)
 // Helper function to round to sig sf
 function sigFigs(n, sig) {
 	if(n===0){return 0;}
-    var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
+    var mult = Math.pow(10, sig - Math.floor(Math.log(Math.abs(n)) / Math.LN10) - 1);
     var num = Math.round(n * mult) / mult;
     var str = num.toString();
     if (str.indexOf('.')==-1)
