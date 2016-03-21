@@ -286,6 +286,8 @@
 							throw "Answer isn't set";
 						}
 					}
+					// Abs all uncertainties
+					expression=expression.replace(/±\w*[-+]/g, '±');
 					var answer=parseExpression(expression);
 					screen.val(answer.value+'\u00B1'+answer.abs_uncertainty());
 					ans=answer;
