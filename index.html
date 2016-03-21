@@ -161,13 +161,14 @@
 					case ('DEL'):
 						isinput=false;
 						if (ans)
-							$('.calculator .screen textarea')[0].innerHTML='';
+							$('.calculator .screen textarea').val('');
 						else
-							$('.calculator .screen textarea')[0].innerHTML=$('.calculator .screen textarea')[0].innerHTML.substring(0,$('.calculator .screen textarea')[0].innerHTML.length-1);
+							var screen = $('.calculator .screen textarea');
+							screen.val(screen.val().substring(0,screen.val().length-1));
 						break;
 					case ('AC'):
 						isinput=false;
-						$('.calculator .screen textarea')[0].innerHTML='';
+						$('.calculator .screen textarea').val('');
 						last_answer=false;
 						ans=false;
 						break;
@@ -242,10 +243,10 @@
 				var screen=$('.calculator .screen textarea');
 				if (isinput)
 				{
-					screen[0].innerHTML=((ans?'':screen[0].innerHTML)+button);
+					screen.val((ans?'':screen.val())+button);
 					ans=false;
 				}
-				if (screen.text().indexOf('ANS')!==-1)
+				if (screen.val().indexOf('ANS')!==-1)
 				{
 					show_ANS_value();
 				} else if ($('.calculator .ans_value').css('display')!=='none') {
@@ -255,7 +256,7 @@
 			function raw_input(s)
 			{
 				var screen=$('.calculator .screen textarea')[0];
-				screen.innerHTML+=s;
+				screen.val(screen.val()+s);
 			}
 			function calculate()
 			{
@@ -263,7 +264,7 @@
 				ga('send', 'event', 'button', 'click', 'Equals');
 				// Calculate!
 				var screen=$('.calculator .screen textarea');
-				var expression=screen.text();
+				var expression=screen.val();
 				try
 				{
 					if (expression.indexOf('ANS')!==-1)
@@ -272,12 +273,12 @@
 						{
 							expression=expression.replace(/ANS/g, (last_answer.value+'\u00B1'+last_answer.uncertainty));
 						} else {
-							screen.text('ERROR');
+							screen.val('ERROR');
 							throw "Answer isn't set";
 						}
 					}
 					var answer=parseExpression(expression);
-					screen.text(answer.value+'\u00B1'+answer.abs_uncertainty());
+					screen.val(answer.value+'\u00B1'+answer.abs_uncertainty());
 					ans=answer;
 					last_answer=answer;
 					show_links();
@@ -285,7 +286,7 @@
 					console.log(e);
 					ans=true;
 					last_alswer=false;
-					screen.text('ERROR');
+					screen.val('ERROR');
 				}
 			}
 			function show_links()
@@ -305,10 +306,10 @@
 				if (l.text().indexOf('Absolute')==-1)
 				{
 					l.text('Show Absolute');
-					screen.text(ans.value+"(\u00B1"+ans.per_uncertainty()+"%)");
+					screen.val(ans.value+"(\u00B1"+ans.per_uncertainty()+"%)");
 				} else {
 					l.text('Show Relative');
-					screen.text(ans.value+"\u00B1"+ans.abs_uncertainty());
+					screen.val(ans.value+"\u00B1"+ans.abs_uncertainty());
 				}
 			}
 			function round_to_final()
@@ -325,16 +326,16 @@
 				}
 				if (unc===0)
 				{
-					screen.text(ans.value+'\u00B1'+unc);
+					screen.val(ans.value+'\u00B1'+unc);
 					return;
 				}
 				var dp_in_unc = parseInt(Math.log(unc)/Math.LN10);	// -ve if < 0, otherwise how many 0s
 				var rounded_value=parseInt(Math.round(ans.value/Math.pow(10,dp_in_unc-1)))*Math.pow(10,dp_in_unc-1);
 				if (absolute)
 				{
-					screen.text(rounded_value+'\u00B1'+unc);
+					screen.val(rounded_value+'\u00B1'+unc);
 				} else {
-					screen.text(rounded_value+'(\u00B1'+unc+'%)');
+					screen.val(rounded_value+'(\u00B1'+unc+'%)');
 				}
 			}
 			function toggle_scientific()
@@ -372,7 +373,7 @@
 			<tr>
 				<td>
 					<table class="calculator" cellspacing="7px;">
-					<tr><td colspan='2' class='cite'><a href='http://www.ollyfg.com'>from Olly F-G</a> v1.3</td><td class="solar" colspan='3'><div></div><div></div><div></div><div></div></td></tr>
+					<tr><td colspan='2' class='cite'><a href='http://www.ollyfg.com'>from Olly F-G</a> v1.4</td><td class="solar" colspan='3'><div></div><div></div><div></div><div></div></td></tr>
 					<tr>
 						<td class="screen" colspan='5'>
 							<textarea></textarea>

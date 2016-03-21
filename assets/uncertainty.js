@@ -280,18 +280,18 @@ function parseUNum(string)
 	}
 }
 
-// A nicer and more robust parsing algorithm
+// A parsing algorithm
 function parseExpression(string)
 {
 
 	function operator_order(operator)
 	{
-		var ops=['sin','cos','tan','^','\u221A','\u00F7','\u00D7','+','-'].reverse();
+		var ops=['sin','cos','tan','^','\u221A','\u00F7','/','\u00D7','*','+','-'].reverse();
 		return ops.indexOf(operator)===-1?0:ops.indexOf(operator);
 	}
 
 	var operands=/\d|\.|\u00B1/;
-	var operators=/\+|\-|\u00D7|\u00F7|\^|sin|cos|tan|\u221A|log|ln/;
+	var operators=/\+|\-|\u00D7|\*|\u00F7|\/|\^|sin|cos|tan|\u221A|log|ln/;
 	var functions=/sin|cos|tan|\u221A|log|ln/;
 
 	// Split into tokens - either numbers or operators
@@ -441,7 +441,7 @@ function parseExpression(string)
 
 }
 
-// Evalueates an expression in postfix notation
+// Evaluates an expression in postfix notation
 function evaluate_expression(exp)
 {
 	var operands=/\d|\.|\u00B1/;
@@ -482,7 +482,13 @@ function performOp(op, num1, num2)
 		case ('\u00D7'):
 			var result=num1.times(num2);
 			break;
+		case ('*'):
+			var result=num1.times(num2);
+			break;
 		case ('\u00F7'):
+			var result=num1.divide(num2);
+			break;
+		case ('/'):
 			var result=num1.divide(num2);
 			break;
 		case ('^'):
