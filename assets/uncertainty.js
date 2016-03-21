@@ -117,7 +117,7 @@ function UNumber(value,uncertainty)
 			// Interval arithmetic
 			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
 			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.divide(interval1,interval2);
+			var answerInterval = window.zizhujy.divide(interval2,interval1);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
