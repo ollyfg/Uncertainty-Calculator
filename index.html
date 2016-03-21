@@ -125,6 +125,8 @@
 					e.preventDefault();
 					calculate();
 				}
+				ans=false;
+				hide_links();
 			}
 			function handleButtonClick(e)
 			{
@@ -296,7 +298,7 @@
 				} catch (e) {
 					console.log(e);
 					ans=true;
-					last_alswer=false;
+					last_answer=false;
 					screen.val('ERROR');
 				}
 			}
