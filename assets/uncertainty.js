@@ -1,4 +1,7 @@
-// Simple uncertainty calculating helpers
+// Simple uncertainty calculating
+
+// If realMode === true, expect window.zizhujy to be around to do interval arithmetic.
+// We can also use the helper functions uNumToInterval() and intervalToUNum()
 
 // A base number class supporting uncertainties
 function UNumber(value,uncertainty)
@@ -13,18 +16,21 @@ function UNumber(value,uncertainty)
 	this.abs_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.uncertainty,sf);
 	}
 	this.rel_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
 		if (this.value===0) {return Infinity;}
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.uncertainty/this.value,sf);
 	}
 	this.per_uncertainty = function(sf)
 	{
 		sf=sf?sf:2;
 		if (this.value===0) {return Infinity;}
+		if (this.uncertainty===Infinity) {return Infinity;}
 		return sigFigs(this.rel_uncertainty(sf)*100,sf);
 	}
 	this.pythag = function(n1,n2)
@@ -39,10 +45,18 @@ function UNumber(value,uncertainty)
 		{
 			number=new UNumber(raw);
 		}
-		// Add abs uncertainties
-		var added_unc = this.pythag( number.abs_uncertainty(), this.abs_uncertainty() );
-		var added_val = number.value+this.value;
-		return new UNumber( added_val, added_unc );
+		if (!realMode){
+			// Add abs uncertainties
+			var added_unc = this.pythag( number.abs_uncertainty(), this.abs_uncertainty() );
+			var added_val = number.value+this.value;
+			return new UNumber( added_val, added_unc );
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.add(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.minus = function(raw)
 	{
@@ -52,10 +66,18 @@ function UNumber(value,uncertainty)
 		{
 			number=new UNumber(raw);
 		}
-		// Add abs uncertainties
-		var minus_unc = this.pythag( number.abs_uncertainty(), this.abs_uncertainty() );
-		var minus_val = this.value-number.value;
-		return new UNumber( minus_val, minus_unc );
+		if (!realMode){
+			// Add abs uncertainties
+			var minus_unc = this.pythag( number.abs_uncertainty(), this.abs_uncertainty() );
+			var minus_val = this.value-number.value;
+			return new UNumber( minus_val, minus_unc );
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.subtract(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.times = function(raw)
 	{
@@ -65,10 +87,18 @@ function UNumber(value,uncertainty)
 		{
 			number=new UNumber(raw);
 		}
-		// Add rel uncertainties
-		var times_unc = this.pythag( number.rel_uncertainty(), this.rel_uncertainty() );
-		var times_val=this.value*number.value;
-		return new UNumber( times_val, times_unc );
+		if (!realMode){
+			// Add rel uncertainties
+			var times_unc = this.pythag( number.rel_uncertainty(), this.rel_uncertainty() );
+			var times_val=this.value*number.value;
+			return new UNumber( times_val, times_unc*times_val );
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.multiply(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.divide = function(raw)
 	{
@@ -78,10 +108,18 @@ function UNumber(value,uncertainty)
 		{
 			number=new UNumber(raw);
 		}
-		// Add rel uncertainties
-		var div_unc = this.pythag( number.rel_uncertainty(), this.rel_uncertainty() );
-		var div_val = this.value/number.value;
-		return new UNumber( div_val, div_unc*div_val );
+		if (!realMode){
+			// Add rel uncertainties
+			var div_unc = this.pythag( number.rel_uncertainty(), this.rel_uncertainty() );
+			var div_val = this.value/number.value;
+			return new UNumber( div_val, div_unc*div_val );
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.divide(interval2,interval1);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.pow = function(raw)
 	{
@@ -91,42 +129,98 @@ function UNumber(value,uncertainty)
 		{
 			number=new UNumber(raw);
 		}
-		// times relative uncertianty by exponential
-		var pow_unc = this.rel_uncertainty()*number.value;
-		var pow_val = Math.pow(this.value,number.value);
-		return new UNumber( pow_val, pow_unc*pow_val );
+		if (!realMode){
+			// times relative uncertianty by exponential
+			var pow_unc = this.rel_uncertainty()*number.value;
+			var pow_val = Math.pow(this.value,number.value);
+			return new UNumber( pow_val, pow_unc*pow_val );
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.pow(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.sqrt = function(raw)
 	{
-		return this.pow(new UNumber(0.5));
+		if (!realMode){
+			return this.pow(new UNumber(0.5));
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.sqrt(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.sin = function()
 	{
-		var val=Math.sin(this.value);
-		var unc=Math.abs(Math.sin(this.value+this.uncertainty)-val);
-		return new UNumber(val,unc);
+		if (!realMode){
+			var val=Math.sin(this.value);
+			var unc=Math.abs(Math.sin(this.value+this.uncertainty)-val);
+			return new UNumber(val,unc);
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.sin(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.cos = function()
 	{
-		var val=Math.cos(this.value);
-		var unc=Math.abs(Math.cos(this.value+this.uncertainty)-val);
-		return new UNumber(val,unc);
+		if (!realMode){
+			var val=Math.cos(this.value);
+			var unc=Math.abs(Math.cos(this.value+this.uncertainty)-val);
+			return new UNumber(val,unc);
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.cos(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.tan = function()
 	{
-		var val=Math.tan(this.value);
-		var unc=Math.abs(Math.tan(this.value+this.uncertainty)-val);
-		return new UNumber(val,unc);
+		if (!realMode){
+			var val=Math.tan(this.value);
+			var unc=Math.abs(Math.tan(this.value+this.uncertainty)-val);
+			return new UNumber(val,unc);
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.tan(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.log = function()
 	{
-		var val = Math.log(this.value)/Math.LN10;
-		var unc = this.uncertainty/(this.value*Math.log(10));
-		return new UNumber(val, unc);
+		if (!realMode){
+			var val = Math.log(this.value)/Math.LN10;
+			var unc = this.uncertainty/(this.value*Math.log(10));
+			return new UNumber(val, unc);
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.log(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 	this.ln = function()
 	{
-		return new UNumber(Math.log(this.value), this.uncertainty/this.value);
+		if (!realMode){
+			return new UNumber(Math.log(this.value), this.uncertainty/this.value);
+		} else {
+			// Interval arithmetic
+			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.ln(interval1,interval2);
+			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
+		}
 	}
 }
 
@@ -138,7 +232,7 @@ function to_absolute(u,v)
 // Helper function to round to sig sf
 function sigFigs(n, sig) {
 	if(n===0){return 0;}
-    var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
+    var mult = Math.pow(10, sig - Math.floor(Math.log(Math.abs(n)) / Math.LN10) - 1);
     var num = Math.round(n * mult) / mult;
     var str = num.toString();
     if (str.indexOf('.')==-1)
@@ -170,13 +264,13 @@ function parseUNum(string)
 		{
 			var parts=string.split('\u00B1/');
 			return new UNumber(parseFloat(parts[0]),to_absolute(parseFloat(parts[1]),parseFloat(parts[0])));
-		} 
+		}
 		else if (string.indexOf('\u00B1%')!==-1 )
 		{
 			var parts=string.split('\u00B1%');
 			return new UNumber(parseFloat(parts[0]),to_absolute(parseFloat(parts[1]/100),parseFloat(parts[0])));
-		} 
-		else 
+		}
+		else
 		{
 			var parts=string.split('\u00B1');
 			return new UNumber(parseFloat(parts[0]),parseFloat(parts[1]));
@@ -186,20 +280,20 @@ function parseUNum(string)
 	}
 }
 
-// A nicer and more robust parsing algorithm
-function parseExpression2(string)
+// A parsing algorithm
+function parseExpression(string)
 {
-	
+
 	function operator_order(operator)
 	{
-		var ops=['sin','cos','tan','^','\u221A','\u00F7','\u00D7','+','-'].reverse();
+		var ops=['sin','cos','tan','^','\u221A','\u00F7','/','\u00D7','*','+','-'].reverse();
 		return ops.indexOf(operator)===-1?0:ops.indexOf(operator);
 	}
-	
+
 	var operands=/\d|\.|\u00B1/;
-	var operators=/\+|\-|\u00D7|\u00F7|\^|sin|cos|tan|\u221A|log|ln/;
+	var operators=/\+|\-|\u00D7|\*|\u00F7|\/|\^|sin|cos|tan|\u221A|log|ln/;
 	var functions=/sin|cos|tan|\u221A|log|ln/;
-	
+
 	// Split into tokens - either numbers or operators
 	var tokens=[];
 	var current='';
@@ -260,29 +354,29 @@ function parseExpression2(string)
 		}
 	}
 	tokens=tokens.reverse();
-	
+
 	var operator_stack=[];
 	var number_stack=[];
-	
+
 	while (tokens.length!==0)
 	{
 		var token = tokens.pop();
-		
+
 		if (operands.test(token))
 		{
 			number_stack.push(token);
 		}
-		
+
 		else if (token=='(' || operator_stack.length===0 || (operator_order(token) > operator_order(operator_stack[operator_stack.length-1])) )
 		{
 			operator_stack.push(token);
 		}
-		
+
 		else if (token==')')
 		{
 			while (operator_stack[operator_stack.length-1]!='(')
 			{
-				var operator = operator_stack.pop(); 
+				var operator = operator_stack.pop();
 				if (functions.test(operator))
 				{
 					var right_operand = number_stack.pop();
@@ -296,10 +390,10 @@ function parseExpression2(string)
 			}
 			operator_stack.pop();
 		}
-		
+
 		else if (operator_order(token) <= operator_order(operator_stack[operator_stack.length-1]))
 		{
-			while (operator_stack.length!==0 && operator_order(token) <= operator_order(operator_stack[operator_stack.length-1])) 
+			while (operator_stack.length!==0 && operator_order(token) <= operator_order(operator_stack[operator_stack.length-1]))
 			{
 				var operator = operator_stack.pop();
 				if (functions.test(operator))
@@ -316,8 +410,8 @@ function parseExpression2(string)
 			operator_stack.push(token);
 		}
 	}
-	
-	while (operator_stack.length!==0 ) 
+
+	while (operator_stack.length!==0 )
 	{
 		var operator = operator_stack.pop();
 		if (functions.test(operator))
@@ -343,11 +437,11 @@ function parseExpression2(string)
 		}
 	}
 	return evaluate_expression(tokens.reverse());
-	
-	
+
+
 }
 
-// Evalueates an expression in postfix notation
+// Evaluates an expression in postfix notation
 function evaluate_expression(exp)
 {
 	var operands=/\d|\.|\u00B1/;
@@ -388,13 +482,19 @@ function performOp(op, num1, num2)
 		case ('\u00D7'):
 			var result=num1.times(num2);
 			break;
+		case ('*'):
+			var result=num1.times(num2);
+			break;
 		case ('\u00F7'):
+			var result=num1.divide(num2);
+			break;
+		case ('/'):
 			var result=num1.divide(num2);
 			break;
 		case ('^'):
 			var result=num1.pow(num2);
 			break;
-		// Here down are the functions (only need one number)
+		// Here down are the functions that only need one number
 		case ('\u221A'):
 			var result=num1.sqrt();
 			break;

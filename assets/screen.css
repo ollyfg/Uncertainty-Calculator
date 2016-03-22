@@ -4,16 +4,17 @@ body {
 	-o-transition:background 4s;
 	transition:background 4s
 	}
-.frame {width:300px; margin:0 auto;}
+.frame {min-width:300px; margin:0 auto;}
 .calculator {background-color:#DED7D7; border-radius:10px; margin:20px; margin-bottom:50px;
 	-webkit-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
 	-moz-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
 	-o-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
 	-ms-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
-	box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;}
+	box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	float:left;}
 
-.button {background-color:#425651; border-radius:5px; text-align:center; 
-	vertical-align:middle; width:40px; height:40px; color:white; 
+.button {background-color:#425651; border-radius:5px; text-align:center;
+	vertical-align:middle; width:40px; height:40px; color:white;
 	font-color: white; font-family:monospace; font-weight:bold;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -63,7 +64,7 @@ body {
 .buttons.sci .button:hover {background-color:#5E62A1;}
 .buttons.sci .button:active {background-color:#4D5185;}
 
-.screen textarea {width:100%; height:4em; background-color:#E2E9BA; 
+.screen textarea {width:100%; height:4em; background-color:#E2E9BA;
 	border-radius:3px; overflow:auto; text-align:right; font-family:monospace;
 	-webkit-transition:background 2s;
 	-moz-transition:background 2s;
@@ -73,11 +74,11 @@ body {
 .cite a {color:#736F6F; text-decoration:none;}
 .cite a:hover {color:#4A4747; text-decoration:underline;}
 .solar {padding:10px; text-align:right;}
-.solar div {background-color:#4A4747; width:20px; height:20px; 
+.solar div {background-color:#4A4747; width:20px; height:20px;
 	display:inline-block; border:1px solid #333131; border-radius:1px;}
 .solar div:last-child {border-radius:1px 3px 3px 1px}
 .solar div:first-child {border-radius:3px 1px 1px 3px}
-.help {display:none; background-color:#FCFFBE; border:1px dashed #DEE734; border-radius: 1em; font-family:sans-serif; font-size:80%; text-align:left; padding:10px;}
+.help {display:none; background-color:#FCFFBE; border:1px dashed #DEE734; border-radius: 1em; font-family:sans-serif; font-size:80%; text-align:left; padding:10px; max-width:252px;}
 h2 {color:#2F2F2F; font-family:sans-serif; text-align:left; text-decoration:none; font-size:100%; margin-left:20px;}
 a h2 {text-decoration:underline;}
 a h2:hover {color:blue; text-decoration:underline; cursor:pointer;}
@@ -86,3 +87,16 @@ a h2:hover {color:blue; text-decoration:underline; cursor:pointer;}
 .ans_links a:hover {cursor:pointer; text-decoration:underline;}
 .ans_links a {margin-right:10px;}
 .ans_value {font-size:70%; float:right; color:#736F6F; display:none;}
+#memoryBank { display:none; float:right; background-color:#DED7D7; border-radius:10px; margin:20px; padding:10px;
+	-webkit-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	-moz-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	-o-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	-ms-box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	box-shadow: inset -2px -2px 25px -9px rgba(51, 51, 51, 2), 2px 2px 18px 0px #333333;
+	font-family:monospace; font-weight:bold; }
+#memoryBank .memBox { min-width:200px; background-color:#E2E9BA; border:1px solid #B4B4B4; padding:2px; }
+#memoryBank .memBox .cell { padding:3px; display:inline-block; font-weight:normal; }
+#memoryBank .memBox .sto { color:white; background-color:#55E749; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
+#memoryBank .memBox .clr { color:white; background-color:#E77D49; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
+#memoryBank .memBox .use { color:white; background-color:#55E749; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
+#memoryBank .hint { font-size:80%; font-style:italic; }
