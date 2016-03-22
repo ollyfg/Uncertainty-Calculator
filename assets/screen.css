@@ -99,3 +99,4 @@ a h2:hover {color:blue; text-decoration:underline; cursor:pointer;}
 #memoryBank .memBox .sto { color:white; background-color:#55E749; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
 #memoryBank .memBox .clr { color:white; background-color:#E77D49; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
 #memoryBank .memBox .use { color:white; background-color:#55E749; float:right; height:1.2em; padding:3px; font-weight:bold; border-radius:5px; cursor:pointer; }
+#memoryBank .hint { font-size:80%; font-style:italic; }
