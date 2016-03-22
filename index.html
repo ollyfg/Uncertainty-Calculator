@@ -56,7 +56,6 @@
 				$('body').keypress(handleKeyPress);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
-
 			});
 
 			function start_drain(e)
@@ -182,6 +181,18 @@
 						isinput=false;
 						realMode=false;
 						$('.calculator .buttons.sci #real_mode').text('Turn On Real Mode');
+						break;
+					case ('Show Memory'):
+						isinput=false;
+						$('.calculator #memory').text('Hide Memory');
+						var toWidth=parseInt($('#memoryBank').width());
+						$('#memoryBank').css({'width':0,'display':'block','padding-left':0,'padding-right':0});
+						$('#memoryBank').animate({'width':toWidth,'padding':10},400,'swing',function(){$('#memoryBank').css('width','auto')});
+						break;
+					case ('Hide Memory'):
+						isinput=false;
+						$('.calculator #memory').text('Show Memory');
+						$('#memoryBank').animate({'width':0,'padding-left':0,'padding-right':0},400,'swing',function(){$('#memoryBank').css({'width':'auto','display':'none','padding':10})})
 						break;
 					case ('\u00B1(abs)'):
 						button='\u00B1';
@@ -386,7 +397,7 @@
 				var l=$('.button.sci');
 				if (l.text().indexOf('Show')!==-1){
 					l.text('Hide Scientific');
-					$('.buttons.sci').animate({'height':90},400,'swing',fade_in);
+					$('.buttons.sci').animate({'height':132},400,'swing',fade_in);
 				} else {
 					l.text('Show Scientific');
 					$('.buttons.sci table').fadeOut(slide_away);
@@ -408,6 +419,48 @@
 			function hide_ANS_value()
 			{
 				$('.calculator .ans_value').fadeOut();
+			}
+			function mem_store (container) {
+				if (ans){
+					container.text(ans);
+					update_mem_display();
+				}
+			}
+			function mem_clear (container) {
+				container.text('Empty');
+				update_mem_display();
+			}
+			function mem_use (container) {
+				if (ans){
+					$('.calculator .screen textarea').val(container.text());
+				} else {
+					$('.calculator .screen textarea').val($('.calculator .screen textarea').val()+container.text());
+				}
+			}
+			function update_mem_display() {
+				var allFull=true;
+				$('#memoryBank .membox').each(function(){
+					var mem = $(this);
+					var val_cell = mem.children().first();
+					var hasContents = val_cell.text()!=="Empty";
+					mem.empty();
+					mem.append(val_cell);
+					var button = $('<span />');
+					if (hasContents) {
+						mem.append( $('<span />').addClass('use').text('Use').attr('onclick','mem_use($(this).prev())') );
+						mem.append( $('<span />').addClass('clr').text('Clear').attr('onclick','mem_clear($(this).prev().prev())') );
+					} else {
+						allFull=false;
+						mem.append( $('<span />').addClass('sto').text('Store').attr('onclick','mem_store($(this).prev())') );
+					}
+				});
+				if (allFull) {
+					var newRow = $('#memoryBank .memBox').last().clone();
+					newRow.empty();
+					newRow.append( $('<span />').addClass('cell').text('Empty') );
+					newRow.append( $('<span />').addClass('sto').text('Store').attr('onclick','mem_store($(this).prev())') );
+					$('#memoryBank').append(newRow);
+				}
 			}
 		</script>
 	</head>
@@ -432,7 +485,7 @@
 					</tr>
 					<tr class='buttons sci'>
 						<td colspan="5">
-							<table style="width:100%;" cellspacing="10px;">
+							<table style="width:235px;" cellspacing="10px;">
 								<tr>
 									<td class="button">^</td>
 									<td class="button">&radic;</td>
@@ -456,9 +509,8 @@
 					<tr>
 						<td class="button">(</td>
 						<td class="button">)</td>
-						<td class="button">&plusmn;(abs)</td>
-						<td class="button">&plusmn;(rel)</td>
-						<td class="button">&plusmn;(%)</td>
+						<td class="button">&plusmn;</td>
+						<td class="button" colspan="2" id="memory">Show Memory</td>
 					</tr>
 					<tr>
 						<td class="button">7</td>
@@ -488,6 +540,12 @@
 						<td class="button eq" colspan='2'>=</td>
 					</tr>
 				</table>
+				<div id="memoryBank"><table>
+					<tr><td class="memBox">
+						<span class="cell">Empty</span>
+						<span class="sto" onclick="mem_store($(this).prev())">Store</span>
+					</td></tr>
+				</table></div>
 				</td>
 			</tr>
 			<tr>
@@ -495,13 +553,7 @@
 					<a onclick='$(".help.this").slideToggle()'><h2>How do you use this calculator?</h2></a>
 					<div class="help this">
 						<p>Just like a real one!</p>
-						<p>The only big difference is that you can click one of the &plusmn; buttons and then enter the uncertainty for that value
-						(either absolute, relative or percentage, depending on the button). </p><p>
-						Once you've entered <b>&plusmn;</b> it will act as an absolute uncertainty; if you would like another sort, type <b>&plusmn;/</b> for
-						a relative uncertainty or <b>&plusmn;%</b> for a perecentage uncertainty.
-						You can also type <b>'e'</b> to enter <b>'10^'</b> as a shortcut.</p><p>
-						Occasionally the calculator can sometimes get buggy and stop taking input - if this happens you can just <a href="http://ollyfg.com/uncertainty.html">reload</a> the page
-						(If you're a smart cookie and work out exactly when this happens, please <a href="http://ollyfg.com#contact">Contact Me</a>).</p>
+						<p>The only big difference is that you can click the &plusmn; button and then enter the (absolute) uncertainty for that value. </p>
 					</div>
 
 					<a onclick='$(".help.what").slideToggle()'><h2>What is an uncertainty?</h2></a>
@@ -520,38 +572,6 @@
 						<i>how</i> exact your measurement is (smaller uncertainties mean a more exact measurement).</p>
 						</div>
 
-					<a onclick='$(".help.types").slideToggle()'><h2>What sorts of uncertainties exist?</h2></a>
-					<div class="help types">
-					<p>There are 3 sorts of uncertainty that most people use:</p>
-						<ul>
-							<li>
-							<b>Absolute Uncertainty</b> <p>This is what we used in our example above, and it means that we give our uncertainty value (0.05) in the
-							same units as the length we measured (so cm in the example above). Absolute Uncertainties are the usual way to give uncertainties in final answers.</p>
-							</li>
-							<li>
-							<b>Relative Uncertainty</b> <p>Sometimes just looking at absolute uncertainties makes it hard to put a number in context.
-							In this case we could convert the absolute uncertainty into a relative uncertainty. This means that the uncertainty value
-							will be <i>relative</i> to the number it belongs to. If the relative uncertainty is 1, it means that the absolute uncertainty is
-							exactly the same as the number, while if it is 0.5, it means that it is exactly half the number it belongs to.
-							To calculate the relative uncertainty from the absolute uncertainty, we divide the absolute uncertainty by the number.
-							In our pencil case above, we would do:
-							0.05cm &divide; 15.1 = 0.0006
-							That's a small number! Now we know that our uncertainty is tiny compared to the actual number, so it was an accurate measurement.
-							</li>
-							<li>
-							<b>Percentage Uncertainty</b> <p>While relative uncertanties are great and all, they don't really put the number in much context - all
-							we can see is that it's pretty small. Luckily, most of us know what a percent is (it's one hundredth). And handily, if we times our
-							relative uncertainty by 100, we get a number called the percentage uncertainty, which tells us how exact our measurement is by
-							telling us how many <i>percent</i> of our value can change, and still be within the absolute uncertainty that we measured.
-							From the example above we can calculate the percentage uncertainty by doing:
-							0.0006 &times; 100 = 0.06%
-							Percentage uncertainties are normally written like so:
-							pencil length = 15.1(&plusmn;0.06%)cm.
-							</p>
-							</li>
-						</ul>
-					</div>
-
 					<a onclick='$(".help.real_mode").slideToggle()'><h2>What is "real mode"?</h2></a>
 					<div class="help real_mode">
 					<p>The way to calculate uncertainty estimates that I was taught at university was wrong (or at least very simplified for certain uses).
@@ -560,6 +580,7 @@
 					The actual maths is pretty complicated, and I don't pretend to understand it all, but by standing on the shoulders of giants
 					(<a href="https://github.com/Jeff-Tian/JavaScriptIntervalArithmetic">Jeff Tian</a>), I have managed to build it into this calculator. In most cases you shouldn't
 					see massive differences, except when dealing with very large errors.</p>
+					<p>It should be noted that real mode is much better at dealing (correctly) with errors in exponents, square roots, logs, and all those more advanced functions.</p>
 					</div>
 
 					<a onclick='$(".help.contact").slideToggle()'><h2>I've found a bug, or have a suggestion!</h2></a>
