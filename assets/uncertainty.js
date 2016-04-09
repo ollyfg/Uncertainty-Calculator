@@ -148,9 +148,8 @@ function UNumber(value,uncertainty)
 			return this.pow(new UNumber(0.5));
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.sqrt(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.sqrt(interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
@@ -162,9 +161,8 @@ function UNumber(value,uncertainty)
 			return new UNumber(val,unc);
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.sin(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.sin(interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
@@ -176,9 +174,8 @@ function UNumber(value,uncertainty)
 			return new UNumber(val,unc);
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.cos(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.cos(interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
@@ -190,9 +187,8 @@ function UNumber(value,uncertainty)
 			return new UNumber(val,unc);
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.tan(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.tan(interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
@@ -204,9 +200,9 @@ function UNumber(value,uncertainty)
 			return new UNumber(val, unc);
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.log(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
+			var base = window.zizhujy.uNumToInterval(10, 0);
+			var answerInterval = window.zizhujy.log(base, interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
@@ -216,9 +212,8 @@ function UNumber(value,uncertainty)
 			return new UNumber(Math.log(this.value), this.uncertainty/this.value);
 		} else {
 			// Interval arithmetic
-			var interval1 = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var interval2 = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
-			var answerInterval = window.zizhujy.ln(interval1,interval2);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var answerInterval = window.zizhujy.ln(interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
 	}
