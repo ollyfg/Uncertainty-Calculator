@@ -338,8 +338,8 @@
         },
 
         ln: function(interval){
-            var l = Math.ln(interval.val[0]);
-            var t = Math.ln(interval.val[1]);
+            var l = Math.log(interval.val[0]);
+            var t = Math.log(interval.val[1]);
 
             var def = interval.def;
             if(isNaN(l) && isNaN(t)) def = [false, false];

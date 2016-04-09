@@ -200,8 +200,8 @@ function UNumber(value,uncertainty)
 			return new UNumber(val, unc);
 		} else {
 			// Interval arithmetic
-			var interval = window.zizhujy.uNumToInterval(number.value, number.uncertainty);
-			var base = window.zizhujy.uNumToInterval(10, 0);
+			var interval = window.zizhujy.uNumToInterval(this.value, this.uncertainty);
+			var base = {'val':[10,10]};
 			var answerInterval = window.zizhujy.log(base, interval);
 			return new UNumber(window.zizhujy.intervalToUNum(answerInterval)[0], window.zizhujy.intervalToUNum(answerInterval)[1]);
 		}
