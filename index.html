@@ -35,16 +35,6 @@
 		<title>Olly's Uncertainty Calculator</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="assets/screen.css">
 		<script type="text/javascript" src="assets/jquery-1.10.1.min.js"></script>
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		  ga('create', 'UA-55184680-1', 'auto');
-		  ga('send', 'pageview');
-
-		</script>
 		<script type="text/javascript">
 			// Disable context menu on android
 			for (var i=0; i<$('button').length; i++)
@@ -56,6 +46,9 @@
 				$('body').keypress(handleKeyPress);
 				$('.solar div').mouseover(start_drain);
 				$('.solar div').mouseout(stop_drain);
+				// Count how many pople visit this page!
+				// Don't worry, it only logs IP, and nothing else (as a way to count unique visitors)
+				function ajaxRequest(){var b=["Msxml2.XMLHTTP","Microsoft.XMLHTTP"];if(window.ActiveXObject)for(var a=0;a<b.length;a++)try{return new ActiveXObject(b[a])}catch(c){}else return window.XMLHttpRequest?new XMLHttpRequest:!1}var countThis=new ajaxRequest;countThis.open("GET","http://counter.ollyfg.com?keys=site,site-uncertainty-calculator",!0);countThis.send(null);
 			});
 
 			function start_drain(e)
@@ -310,8 +303,6 @@
 			}
 			function calculate()
 			{
-				// Send Analytics
-				ga('send', 'event', 'button', 'click', 'Equals');
 				// Calculate!
 				var screen=$('.calculator .screen textarea');
 				var expression=screen.val();
